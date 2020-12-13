@@ -18,3 +18,4 @@ class NewsLink(models.Model):
     slug = models.SlugField(max_length=31)
     pub_date = models.DateField()
     link = models.URLField()
+    startup = models.ForeignKey(Startup, on_delete=models.CASCADE)
