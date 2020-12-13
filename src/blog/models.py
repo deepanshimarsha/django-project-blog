@@ -9,3 +9,7 @@ class Post(models.Model):
     pub_date = models.DateField()
     tags = models.ManyToManyField(Tag)
     startups = models.ManyToManyField(Startup)
+
+    def __str__(self):
+        date_string = self.pub_date.strftime("%y-%m-%d")
+        return f"(self.title} on {date_string}"
