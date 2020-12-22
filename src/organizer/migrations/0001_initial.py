@@ -2,6 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
+from django_extensions.db.fields import AutoSlugField
 
 
 class Migration(migrations.Migration):
@@ -17,8 +18,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=31, unique=True)),
-                ('slug', models.SlugField(help_text='A label for URL config.', max_length=31, unique=True)),
-            ],
+                ("slug", AutoSlugField(blank=True, editable=False, help_text="A label for URL config.", max_length=31, populate_from=["name"],)),
+                 ],
             options={
                 'ordering': ['name'],
             },
