@@ -9,8 +9,8 @@ from .serializers import TagSerializer
 
 class TagApiDetail(APIView):
 
-    def get(self, request, pk):
-        tag = get_object_or_404(Tag, pk=pk)
+    def get(self, request, slug):
+        tag = get_object_or_404(Tag, slug=slug)
         s_tag = TagSerializer(
             tag,
             context={"request": request},
