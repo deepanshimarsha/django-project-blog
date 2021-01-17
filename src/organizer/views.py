@@ -1,40 +1,31 @@
-import json
-from django.http import HttpResponse
+
+
 from django.shortcuts import get_object_or_404, get_list_or_404
-from django.views import View
+
 from .models import Tag
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializers import TagSerializer
 
-def serialize_tag_to_dict(tag):
-    return dict(
-        id = tag.pk,
-        name = tag.name,
-        slug = tag.slug,
-    )
-
-def serialize_tag_to_json(tag):
-    return json.dumps(serialize_tag_to_dict(tag))
-
-def serialize_tag_list_to_json(tag_list):
-    return json.dumps(list(map(serialize_tag_to_dict, tag_list)))
-
-class TagApiDetail(View):
+class TagApiDetail(APIView):
 
     def get(self, request, pk):
         tag = get_object_or_404(Tag, pk=pk)
-        tag_json = serialize_tag_to_json(tag)
-        return HttpResponse(
-            tag_json,
-            content_type="application/json"
+        s_tag = TagSerializer(
+            tag,
+            context={"request": request},
         )
+        return Response(s_tag.data)
 
-class TagApiList(View):
+class TagApiList(APIView):
 
     def get(self, request):
         tag_list = get_list_or_404(Tag)
-        tag_json = serialize_tag_list_to_json(tag_list)
-        return HttpResponse(
-            tag_json,
-            content_type = "application/json"
-            )
+        s_tag = TagSerializer(
+            tag_list,
+            many=True,
+            context={"request": request},
+        )
+        return Response(s_tag.data)
 
 # Create your views here.
