@@ -36,3 +36,4 @@ class NewsLinkSerializer(ModelSerializer):
         model = NewsLink
         fields = "__all__"
 
+
