@@ -5,6 +5,6 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", PostList.as_view(), name="post-list"),
-    path("<int:year>/<int:month>/<str:slug>/", PostDetail.as_view(), name="post-detail"),
+    path("", PostList.as_view(), name="post_list"),
+    path("<int:year>/<int:month>/<str:slug>/", PostDetail.as_view(), name="post_detail"),
 ]
