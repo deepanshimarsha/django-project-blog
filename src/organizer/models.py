@@ -1,5 +1,6 @@
 from django.db import models
 from django_extensions.db.fields import AutoSlugField
+from django.urls import reverse
 
 # Create your models here.
 class Tag(models.Model):
@@ -11,6 +12,12 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse(
+            "tag_detail",
+            kwargs={"slug": self.slug},
+        )
 
 class Startup(models.Model):
     name = models.CharField(max_length=31, db_index=True)
@@ -28,6 +35,13 @@ class Startup(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse(
+            "startup_detail",
+            kwargs={"slug": self.slug},
+        )
+
 
 class NewsLink(models.Model):
     title = models.CharField(max_length=31)

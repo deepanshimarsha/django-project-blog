@@ -1,6 +1,7 @@
 from django.db import models
 from organizer.models import Tag, Startup
 import datetime
+from django.urls import reverse
 
 # Create your models here.
 class Post(models.Model):
@@ -19,3 +20,13 @@ class Post(models.Model):
     def __str__(self):
         date_string = self.pub_date.strftime("%y-%m-%d")
         return f"{self.title} on {date_string}"
+
+    def get_absolute_url(self):
+        return reverse(
+            "post_detail",
+            kwargs={
+                "year": self.pub_date.year,
+                "month": self.pub_date.month,
+                "slug": self.slug,
+            },
+        )
