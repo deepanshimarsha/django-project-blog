@@ -1,6 +1,6 @@
 from .models import Tag, Startup, NewsLink
 from .serializers import TagSerializer, StartupSerializer, NewsLinkSerializer
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 
@@ -26,7 +26,7 @@ class TagApiDetail(RetrieveAPIView):
     serializer_class = TagSerializer
     lookup_field = "slug"
 
-class TagApiList(ListAPIView):
+class TagApiList(ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
