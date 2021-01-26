@@ -15,7 +15,7 @@ class TagSerializer(HyperlinkedModelSerializer):
 
 class StartupSerializer(HyperlinkedModelSerializer):
 
-    tags = TagSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True)
 
     class Meta:
         model = Startup
@@ -26,7 +26,14 @@ class StartupSerializer(HyperlinkedModelSerializer):
                 "view_name": "api-startup-detail",
             }
         }
-
+    def create(self, validated_data):
+        tag_data_list = validated_data.pop("tags")
+        startup = Startup.objects.create(**validated_data)
+        tag_list = Tag.objects.bulk_create(
+            [Tag(**tag_data) for tag_data in tag_data_list]
+        )
+        startup.tags.add(*tag_list)
+        return startup
 
 class NewsLinkSerializer(ModelSerializer):
 
