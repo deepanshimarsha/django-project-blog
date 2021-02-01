@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Tag ,Startup
-from .serializers import TagSerializer, StartupSerializer
+from .models import Tag ,Startup, NewsLink
+from .serializers import TagSerializer, StartupSerializer, NewsLinkSerializer
 
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
