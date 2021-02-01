@@ -1,5 +1,6 @@
-from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer, HyperlinkedRelatedField, ModelSerializer, SerializerMethodField
 from .models import NewsLink, Tag, Startup
+from rest_framework.reverse import reverse
 
 class TagSerializer(HyperlinkedModelSerializer):
 
@@ -15,7 +16,7 @@ class TagSerializer(HyperlinkedModelSerializer):
 
 class StartupSerializer(HyperlinkedModelSerializer):
 
-    tags = TagSerializer(many=True)
+    tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         model = Startup
@@ -26,21 +27,29 @@ class StartupSerializer(HyperlinkedModelSerializer):
                 "view_name": "api-startup-detail",
             }
         }
-    def create(self, validated_data):
-        tag_data_list = validated_data.pop("tags")
-        startup = Startup.objects.create(**validated_data)
-        tag_list = Tag.objects.bulk_create(
-            [Tag(**tag_data) for tag_data in tag_data_list]
-        )
-        startup.tags.add(*tag_list)
-        return startup
+
 
 class NewsLinkSerializer(ModelSerializer):
 
-    startup = StartupSerializer()
+    url = SerializerMethodField()
+    startup = HyperlinkedRelatedField(
+        queryset=Startup.objects.all(),
+        lookup_field="slug",
+        view_name="api-startup-detail",
+    )
 
     class Meta:
         model = NewsLink
-        fields = "__all__"
+        #fields = "__all__"
+        exclude = ("id",)
 
+    def get_url(self, newslink):
+        return reverse(
+            "api-newslink-detail",
+            kwargs=dict(
+                startup_slug=newslink.startup.slug,
+                newslink_slug=newslink.slug,
+            ),
+            request=self.context["request"],
+        )
 
